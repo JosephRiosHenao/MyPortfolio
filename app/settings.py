@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,14 +31,48 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 ]
+
+SOCIAL_APPS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # ... include the providers you want to enable:
+    'allauth.socialaccount.providers.amazon',
+    'allauth.socialaccount.providers.apple',
+    'allauth.socialaccount.providers.discord',
+    'allauth.socialaccount.providers.dropbox',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.instagram',
+    'allauth.socialaccount.providers.linkedin',
+    'allauth.socialaccount.providers.linkedin_oauth2',
+    'allauth.socialaccount.providers.microsoft',
+    'allauth.socialaccount.providers.paypal',
+    'allauth.socialaccount.providers.pinterest',
+    'allauth.socialaccount.providers.reddit',
+    'allauth.socialaccount.providers.snapchat',
+    'allauth.socialaccount.providers.spotify',
+    'allauth.socialaccount.providers.steam',
+    'allauth.socialaccount.providers.telegram',
+    'allauth.socialaccount.providers.twitch',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.zoom',
+]
+
+MY_APPS = []
+
+INSTALLED_APPS = DJANGO_APPS + SOCIAL_APPS + MY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,7 +89,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +101,37 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    },
+    'telegram': {
+        'TOKEN': '5688690509:AAEU2cto75Pm2Csxz9Oyv2arsbalecOq5Mk'
+    }
+}
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+LOGIN_REDIRECT_URL = 'home'
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
